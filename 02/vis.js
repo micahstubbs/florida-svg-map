@@ -29,7 +29,7 @@ let stateFIPS = {};
 let countyFIPS = {};
 let remaining = 3;
 
-d3.json('us_counties.json', (err, data) => {
+d3.json('us-counties.json', (err, data) => {
   counties = data;
   if (!--remaining) draw();
 });
