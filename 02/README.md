@@ -1,3 +1,7 @@
+this iteration makes the code nice to work with
+
+---
+
 this iteration removes the radio button that filter by year, to simplify the example
 
 ---
