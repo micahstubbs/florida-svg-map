@@ -1,7 +1,7 @@
-var width = 960,
-  height = 500;
+const width = 960;
+const height = 500;
 
-var stateFIPS = {
+const stateFIPS = {
   '01': { abbrev: 'AL', name: 'Alabama' },
   '02': { abbrev: 'AK', name: 'Alaska' },
   '05': { abbrev: 'AR', name: 'Arkansas' },
@@ -59,24 +59,24 @@ var stateFIPS = {
   '56': { abbrev: 'WY', name: 'Wyoming' }
 };
 
-var countyFIPS = {};
+let countyFIPS = {};
 
-var projection = d3.geo.albersUsa().translate([width / 2, height / 2]);
+const projection = d3.geo.albersUsa().translate([width / 2, height / 2]);
 
-var path = d3.geo.path().projection(projection);
+const path = d3.geo.path().projection(projection);
 
-var color = d3.scale
+const color = d3.scale
   .quantile()
   .domain([0, 10, 100, 1000, 10000])
   .range(['#74c476', '#41ab5d', '#238b45', '#006d2c', '#00441b']);
 
-var svg = d3
+const svg = d3
   .select('body')
   .append('svg')
   .attr('width', width)
   .attr('height', height);
 
-var tooltip = d3
+const tooltip = d3
   .select('body')
   .append('div')
   .attr('class', 'tooltip')
@@ -84,16 +84,16 @@ var tooltip = d3
   .style('z-index', '10')
   .style('visibility', 'hidden');
 
-var counties = {},
-  lyme = {},
-  remaining = 2;
+let counties = {};
+let lyme = {};
+let remaining = 2;
 
-d3.json('us_counties.json', function(err, data) {
+d3.json('us_counties.json', (err, data) => {
   counties = data;
   if (!--remaining) draw();
 });
 
-d3.csv('LymeDisease_9211_county.csv', function(err, data) {
+d3.csv('LymeDisease_9211_county.csv', (err, data) => {
   lyme = data;
   if (!--remaining) draw();
 });
@@ -101,58 +101,52 @@ d3.csv('LymeDisease_9211_county.csv', function(err, data) {
 function draw() {
   countyFIPS = d3
     .nest()
-    .key(function(d) {
-      return d.properties.STATEFP;
-    }) // nest by state
+    .key(d => d.properties.STATEFP) // nest by state
     .entries(counties.features);
 
   countyFIPS = countyFIPS
-    .map(function(d) {
-      return {
-        state: d.key,
-        counties: d.values.reduce(function(prev, next) {
-          prev[next.properties.COUNTYFP] = next.properties.NAME;
-          return prev;
-        }, {})
-      };
-    })
-    .reduce(function(prev, next) {
+    .map(d => ({
+    state: d.key,
+
+    counties: d.values.reduce((prev, next) => {
+      prev[next.properties.COUNTYFP] = next.properties.NAME;
+      return prev;
+    }, {})
+  }))
+    .reduce((prev, next) => {
       prev[next.state] = next.counties;
       return prev;
     }, {});
 
   lyme = d3
     .nest()
-    .key(function(d) {
-      return d.StateCode.length == 1 ? '0' + d.StateCode : d.StateCode;
-    })
+    .key(d => d.StateCode.length == 1 ? `0${d.StateCode}` : d.StateCode)
     .entries(lyme);
 
   lyme = lyme
-    .map(function(d) {
-      return {
-        state: d.key,
-        counties: d.values.reduce(function(prev, next) {
-          var cc = '';
-          if (next.CountyCode.length == 1) {
-            cc = '00' + next.CountyCode;
-          } else if (next.CountyCode.length == 2) {
-            cc = '0' + next.CountyCode;
-          } else {
-            cc = next.CountyCode;
-          }
+    .map(d => ({
+    state: d.key,
 
-          prev[cc] = next;
-          return prev;
-        }, {})
-      };
-    })
-    .reduce(function(prev, next) {
+    counties: d.values.reduce((prev, next) => {
+      let cc = '';
+      if (next.CountyCode.length == 1) {
+        cc = `00${next.CountyCode}`;
+      } else if (next.CountyCode.length == 2) {
+        cc = `0${next.CountyCode}`;
+      } else {
+        cc = next.CountyCode;
+      }
+
+      prev[cc] = next;
+      return prev;
+    }, {})
+  }))
+    .reduce((prev, next) => {
       prev[next.state] = next.counties;
       return prev;
     }, {});
 
-  var yearRange = '2007_2011';
+  const yearRange = '2007_2011';
   // for (var i = 0; i < document.selector.length; i++) { // first year range for page load
   //   if (document.selector[i].checked) {
   //     yearRange = document.selector[i].value;
@@ -164,31 +158,29 @@ function draw() {
     .data(counties.features)
     .enter()
     .append('path')
-    .attr('class', function(d) {
-      return 'county';
-    })
+    .attr('class', d => 'county')
     .attr('d', path)
-    .style('fill', function(d) {
-      var p = d.properties;
+    .style('fill', d => {
+      const p = d.properties;
       return lyme[p.STATEFP] &&
       lyme[p.STATEFP][p.COUNTYFP] &&
-      lyme[p.STATEFP][p.COUNTYFP]['ConfirmedCount_' + yearRange] != ''
-        ? color(+lyme[p.STATEFP][p.COUNTYFP]['ConfirmedCount_' + yearRange])
+      lyme[p.STATEFP][p.COUNTYFP][`ConfirmedCount_${yearRange}`] != ''
+        ? color(+lyme[p.STATEFP][p.COUNTYFP][`ConfirmedCount_${yearRange}`])
         : '#e0e0e0';
     })
-    .on('mouseover', function(d) {
+    .on('mouseover', d => {
       tooltip.html('');
       tooltip.append('pre');
 
-      var p = d.properties;
-      var lymeVal = '';
+      const p = d.properties;
+      let lymeVal = '';
 
       if (
         lyme[p.STATEFP] &&
         lyme[p.STATEFP][p.COUNTYFP] &&
-        lyme[p.STATEFP][p.COUNTYFP]['ConfirmedCount_' + yearRange] != ''
+        lyme[p.STATEFP][p.COUNTYFP][`ConfirmedCount_${yearRange}`] != ''
       ) {
-        var l = lyme[p.STATEFP][p.COUNTYFP]['ConfirmedCount_' + yearRange];
+        const l = lyme[p.STATEFP][p.COUNTYFP][`ConfirmedCount_${yearRange}`];
         lymeVal = l + (l == '1' ? ' confirmed case' : ' confirmed cases');
       } else {
         lymeVal = 'No Data';
@@ -197,52 +189,44 @@ function draw() {
       tooltip
         .select('pre')
         .text(
-          countyFIPS[p.STATEFP][p.COUNTYFP] +
-            ' County, ' +
-            stateFIPS[p.STATEFP].name +
-            '\n' +
-            lymeVal
+          `${countyFIPS[p.STATEFP][p.COUNTYFP]} County, ${stateFIPS[p.STATEFP].name}\n${lymeVal}`
         );
 
       return tooltip.style('visibility', 'visible');
     })
-    .on('mousemove', function() {
-      return tooltip
-        .style('top', d3.event.pageY - 20 + 'px')
-        .style('left', d3.event.pageX + 10 + 'px');
-    })
-    .on('mouseout', function() {
-      return tooltip.style('visibility', 'hidden');
-    });
+    .on('mousemove', () => tooltip
+    .style('top', `${d3.event.pageY - 20}px`)
+    .style('left', `${d3.event.pageX + 10}px`))
+    .on('mouseout', () => tooltip.style('visibility', 'hidden'));
 }
 
 function colorIn(e) {
-  var yearRange = e.value;
-  var counties = svg.selectAll('.county');
+  const yearRange = e.value;
+  const counties = svg.selectAll('.county');
 
-  counties.style('fill', function(d) {
-    var p = d.properties;
+  counties.style('fill', d => {
+    const p = d.properties;
     return lyme[p.STATEFP] &&
     lyme[p.STATEFP][p.COUNTYFP] &&
-    lyme[p.STATEFP][p.COUNTYFP]['ConfirmedCount_' + yearRange] != ''
-      ? color(+lyme[p.STATEFP][p.COUNTYFP]['ConfirmedCount_' + yearRange])
+    lyme[p.STATEFP][p.COUNTYFP][`ConfirmedCount_${yearRange}`] != ''
+      ? color(+lyme[p.STATEFP][p.COUNTYFP][`ConfirmedCount_${yearRange}`])
       : '#e0e0e0';
   });
 
   counties
-    .on('mouseover', function(d) {
+    .on('mouseover', d => {
       tooltip.html('');
       tooltip.append('pre');
 
-      var p = d.properties;
-      var lymeVal = '';
+      const p = d.properties;
+      let lymeVal = '';
 
       if (
         lyme[p.STATEFP] &&
         lyme[p.STATEFP][p.COUNTYFP] &&
-        lyme[p.STATEFP][p.COUNTYFP]['ConfirmedCount_' + yearRange] != ''
+        lyme[p.STATEFP][p.COUNTYFP][`ConfirmedCount_${yearRange}`] != ''
       ) {
-        var l = lyme[p.STATEFP][p.COUNTYFP]['ConfirmedCount_' + yearRange];
+        const l = lyme[p.STATEFP][p.COUNTYFP][`ConfirmedCount_${yearRange}`];
         lymeVal = l + (l == '1' ? ' confirmed case' : ' confirmed cases');
       } else {
         lymeVal = 'No Data';
@@ -251,21 +235,13 @@ function colorIn(e) {
       tooltip
         .select('pre')
         .text(
-          countyFIPS[p.STATEFP][p.COUNTYFP] +
-            ' County, ' +
-            stateFIPS[p.STATEFP].name +
-            '\n' +
-            lymeVal
+          `${countyFIPS[p.STATEFP][p.COUNTYFP]} County, ${stateFIPS[p.STATEFP].name}\n${lymeVal}`
         );
 
       return tooltip.style('visibility', 'visible');
     })
-    .on('mousemove', function() {
-      return tooltip
-        .style('top', d3.event.pageY - 20 + 'px')
-        .style('left', d3.event.pageX + 10 + 'px');
-    })
-    .on('mouseout', function() {
-      return tooltip.style('visibility', 'hidden');
-    });
+    .on('mousemove', () => tooltip
+    .style('top', `${d3.event.pageY - 20}px`)
+    .style('left', `${d3.event.pageX + 10}px`))
+    .on('mouseout', () => tooltip.style('visibility', 'hidden'));
 }
