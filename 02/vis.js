@@ -1,68 +1,7 @@
 const width = 960;
 const height = 500;
 
-const stateFIPS = {
-  '01': { abbrev: 'AL', name: 'Alabama' },
-  '02': { abbrev: 'AK', name: 'Alaska' },
-  '05': { abbrev: 'AR', name: 'Arkansas' },
-  '60': { abbrev: 'AS', name: 'American Samoa' },
-  '04': { abbrev: 'AZ', name: 'Arizona' },
-  '06': { abbrev: 'CA', name: 'California' },
-  '08': { abbrev: 'CO', name: 'Colorado' },
-  '09': { abbrev: 'CT', name: 'Connecticut' },
-  '11': { abbrev: 'DC', name: 'District of Columbia' },
-  '10': { abbrev: 'DE', name: 'Delaware' },
-  '12': { abbrev: 'FL', name: 'Florida' },
-  '13': { abbrev: 'GA', name: 'Georgia' },
-  '66': { abbrev: 'GU', name: 'Guam' },
-  '15': { abbrev: 'HI', name: 'Hawaii' },
-  '19': { abbrev: 'IA', name: 'Iowa' },
-  '16': { abbrev: 'ID', name: 'Idaho' },
-  '17': { abbrev: 'IL', name: 'Illinois' },
-  '18': { abbrev: 'IN', name: 'Indiana' },
-  '20': { abbrev: 'KS', name: 'Kansas' },
-  '21': { abbrev: 'KY', name: 'Kentucky' },
-  '22': { abbrev: 'LA', name: 'Louisana' },
-  '25': { abbrev: 'MA', name: 'Massachusetts' },
-  '24': { abbrev: 'MD', name: 'Maryland' },
-  '23': { abbrev: 'ME', name: 'Maine' },
-  '26': { abbrev: 'MI', name: 'Michigan' },
-  '27': { abbrev: 'MN', name: 'Minnesota' },
-  '29': { abbrev: 'MO', name: 'Missouri' },
-  '28': { abbrev: 'MS', name: 'Mississippi' },
-  '30': { abbrev: 'MT', name: 'Montana' },
-  '37': { abbrev: 'NC', name: 'North Carolina' },
-  '38': { abbrev: 'ND', name: 'North Dakota' },
-  '31': { abbrev: 'NE', name: 'Nebraska' },
-  '33': { abbrev: 'NH', name: 'New Hampshire' },
-  '34': { abbrev: 'NJ', name: 'New Jersey' },
-  '35': { abbrev: 'NM', name: 'New Mexico' },
-  '32': { abbrev: 'NV', name: 'Nevada' },
-  '36': { abbrev: 'NY', name: 'New York' },
-  '39': { abbrev: 'OH', name: 'Ohio' },
-  '40': { abbrev: 'OK', name: 'Oklahoma' },
-  '41': { abbrev: 'OR', name: 'Oregon' },
-  '42': { abbrev: 'PA', name: 'Pennsylvania' },
-  '72': { abbrev: 'PR', name: 'Puerto Rico' },
-  '44': { abbrev: 'RI', name: 'Rhode Island' },
-  '45': { abbrev: 'SC', name: 'South Carolina' },
-  '46': { abbrev: 'SD', name: 'South Dakota' },
-  '47': { abbrev: 'TN', name: 'Tennessee' },
-  '48': { abbrev: 'TX', name: 'Texas' },
-  '49': { abbrev: 'UT', name: 'Utah' },
-  '51': { abbrev: 'VA', name: 'Virginia' },
-  '78': { abbrev: 'VI', name: 'Virgin Islands' },
-  '50': { abbrev: 'VT', name: 'Vermont' },
-  '53': { abbrev: 'WA', name: 'Washington' },
-  '55': { abbrev: 'WI', name: 'Wisconsin' },
-  '54': { abbrev: 'WV', name: 'West Virginia' },
-  '56': { abbrev: 'WY', name: 'Wyoming' }
-};
-
-let countyFIPS = {};
-
 const projection = d3.geo.albersUsa().translate([width / 2, height / 2]);
-
 const path = d3.geo.path().projection(projection);
 
 const color = d3.scale
@@ -86,10 +25,17 @@ const tooltip = d3
 
 let counties = {};
 let lyme = {};
-let remaining = 2;
+let stateFIPS = {};
+let countyFIPS = {};
+let remaining = 3;
 
 d3.json('us_counties.json', (err, data) => {
   counties = data;
+  if (!--remaining) draw();
+});
+
+d3.json('state-fips.json', (err, data) => {
+  stateFIPS = data;
   if (!--remaining) draw();
 });
 
