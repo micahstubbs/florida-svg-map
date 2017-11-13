@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<meta charset='utf-8'>
+<head>
+<style>
+ .county {
+   stroke: #e8e8e8;
+   stroke-width: 1px;
+   stroke-linejoin: round;
+   stroke-opacity: 0.1;
+   transition: fill 0.8s;
+ }
+ .tooltip {
+   background-color: #f7f7f7;
+   padding: 3px 12px;
+   font-family: sans-serif;
+   border: 1px solid #bbbbbb;
+   box-shadow: 1px 1px 4px #bbbbbb;
+}
+pre {
+  font-weight: normal;
+  margin: 5px 0;
+}
+#selector {
+  width: 960px;
+  display: flex;
+  justify-content: space-around;
+}
+#selector span {
+  font-family: sans-serif;
+  font-size: 12px;
+}
+#selector span input {
+  margin-right: 10px;
+}
+</style>
+<link rel='icon' href='data:;base64,iVBORw0KGgo='>
+</head>
+<body>
+<!-- <form id='selector' name='selector'>
+  <span><input type='radio' name='year' value='1992_1996' checked onchange='colorIn(this)'>1992-1996</span>
+  <span><input type='radio' name='year' value='1997_2001' onchange='colorIn(this)'>1997-2001</span>
+  <span><input type='radio' name='year' value='2002_2006' onchange='colorIn(this)'>2002-2006</span>
+  <span><input type='radio' name='year' value='2007_2011' onchange='colorIn(this)'>2007-2011</span>
+</form> -->
+<!-- <script src='http://d3js.org/d3.v4.js'></script> -->
+<script src='d3-v4.11.0.min.js'></script>
+<script src='vis.js'></script>    
