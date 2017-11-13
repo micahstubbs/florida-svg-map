@@ -39,7 +39,7 @@ d3.json('state-fips.json', (err, data) => {
   if (!--remaining) draw();
 });
 
-d3.csv('LymeDisease_9211_county.csv', (err, data) => {
+d3.csv('lyme-disease-9211-county.csv', (err, data) => {
   lyme = data;
   if (!--remaining) draw();
 });
