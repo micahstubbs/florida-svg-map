@@ -1,0 +1,25 @@
+{
+  "name": "florida-svg-map",
+  "version": "1.0.0",
+  "description": "an svg map of florida",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/micahstubbs/florida-svg-map.git"
+  },
+  "keywords": [
+    "svg",
+    "map",
+    "florida",
+    "d3"
+  ],
+  "author": "@micahstubbs <micah.stubbs@gmail.com> (https://twitter.com/micahstubbs)",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/micahstubbs/florida-svg-map/issues"
+  },
+  "homepage": "https://github.com/micahstubbs/florida-svg-map#readme"
+}
