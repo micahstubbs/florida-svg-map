@@ -1,7 +1,7 @@
 const width = 960;
 const height = 500;
 
-const projection = d3.geoAlbersUsa().translate([width / 2, height / 2]);
+const projection = d3.geoAlbers().translate([width / 2, height / 2]);
 const path = d3.geoPath().projection(projection);
 
 const color = d3.scaleQuantile()
