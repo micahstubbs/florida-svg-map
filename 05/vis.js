@@ -1,9 +1,15 @@
 const width = 960;
-const height = 500;
+const height = 900;
 
-const projection = d3.geoAlbers()
-  // .center([-82.46, 28.681389]) // geographic center of Florida
-  .translate([0.28*width, 0.1*height]);
+const projection = d3.geoConicEqualArea()
+  .parallels([29.5, 45.5])
+  .scale(6800)
+  .translate([-7530, -3150])
+  .rotate([88, 0])
+  // .center([-0.6, 38.7]);
+  .center([-82.46, 28.681389]); // geographic center of Florida
+  // .scale()
+  // .translate([0.28*width, 0.1*height]);
 
 const path = d3.geoPath().projection(projection);
 
@@ -25,7 +31,7 @@ svg.append('rect')
   .attr('width', width)
   .attr('height', height)
   .style('fill', 'none')
-  .style('stroke', 'lightGray');
+  .style('stroke', 'black');
 
 const tooltip = d3
   .select('body')
