@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+  <title>Geo (projection configuration)</title>
+</head>
+
+<style>
+body {
+  font-family: "Helvetica Neue", Helvetica, sans-serif;
+  font-size: 12px;
+  color: #333;
+  margin: 10px;
+}
+
+#menu {
+  position: absolute;
+  top: 20px;
+  left: 30px;
+}
+
+#menu .item {
+  margin-bottom: 12px;
+}
+
+#menu .item input {
+  width: 100px;
+}
+
+#menu select {
+  margin-top: 4px;
+}
+
+#menu .item .value {
+  font-weight: bold;
+}
+
+#menu .item span, #menu .item input {
+  vertical-align: middle;
+}
+
+#menu .item .low {
+  display: inline-block;
+  width: 30px;
+  text-align: right;
+}
+
+svg {
+  border: 1px solid #eee;
+}
+
+.map path {
+  fill: #87B687;
+  stroke: #777;
+}
+
+.projection-center {
+  fill: red;
+}
+
+.graticule path {
+  fill: none;
+  stroke: #eee;
+}
+
+.circles path {
+  fill: none;
+  stroke: #aaa;
+}
+</style>
+
+<body>
+  <div id="menu">
+    <div class="projection-type item">
+      <div><select name="type" value="150"></select></div>
+    </div>
+    <div class="slider item">
+      <div class="label">scale (<span class="value">120</span>)</div>
+      <div><span class="low">0</span> <input type="range" name="scale" min="0" max="2000" value="120"> <span>2000</span></div>
+    </div>
+    <div class="slider item">
+      <div class="label">center (lon) (<span class="value">-82</span>)</div>
+      <div><span class="low">-180</span> <input type="range" name="centerLon" min="-180" max="180" value="-82"> <span>180</span></div>
+    </div>
+    <div class="slider item">
+      <div class="label">center (lat) (<span class="value">29</span>)</div>
+      <div><span class="low">-90</span> <input type="range" name="centerLat" min="-90" max="90" value="29"> <span>90</span></div>
+    </div>
+    <div class="slider item">
+      <div class="label">translate (x) (<span class="value">480</span>)</div>
+      <div><span class="low">0</span> <input type="range" name="translateX" min="0" max="960" value="480"> <span>960</span></div>
+    </div>
+    <div class="slider item">
+      <div class="label">translate (y) (<span class="value">250</span>)</div>
+      <div><span class="low">0</span> <input type="range" name="translateY" min="0" max="500" value="250"> <span>500</span></div>
+    </div>
+    <div class="slider item">
+      <div class="label">rotate (&lambda;) (<span class="value">0</span>)</div>
+      <div><span class="low">-180</span> <input type="range" name="rotateLambda" min="-180" max="180" value="0"> <span>180</span></div>
+    </div>
+    <div class="slider item">
+      <div class="label">rotate (&phi;) (<span class="value">0</span>)</div>
+      <div><span class="low">-180</span> <input type="range" name="rotatePhi" min="-180" max="180" value="0"> <span>180</span></div>
+    </div>
+    <div class="slider item">
+      <div class="label">rotate (&gamma;) (<span class="value">0</span>)</div>
+      <div><span class="low">-180</span> <input type="range" name="rotateGamma" min="-180" max="180" value="0"> <span>180</span></div>
+    </div>
+  </div>
+
+  <svg width="900px" height="500px">
+    <g class="graticule"><path></path></g>
+    <g class="circles"></g>
+    <g class="map"></g>
+    <circle class="projection-center" r="4"></circle>
+  </svg>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.2.2/d3.min.js"></script>
+
+  <script>
+var geojson;
+var projectionTypes = [
+  'AzimuthalEqualArea',
+  'AzimuthalEquidistant',
+  'Gnomonic',
+  'Orthographic',
+  'Stereographic',
+  'Albers',
+  'ConicConformal',
+  'ConicEqualArea',
+  'ConicEquidistant',
+  'Equirectangular',
+  'Mercator',
+  'TransverseMercator'
+];
+
+var projection;
+var geoGenerator = d3.geoPath()
+  .projection(projection);
+
+var graticule = d3.geoGraticule();
+
+var circles = [
+  [-135, 0], [-90, 0], [-45, 0], [0, 0], [45, 0], [90, 0], [135, 0], [180, 0],
+  [0, -70], [0, -35], [0, 35], [0, 70],
+  [180, -70], [180, -35], [180, 35], [180, 70],
+];
+var geoCircle = d3.geoCircle().radius(10).precision(1);
+
+var state = {
+  type: 'ConicEqualArea',
+  scale: 120,
+  translateX: 450,
+  translateY: 250,
+  centerLon: -82,
+  centerLat: 29,
+  rotateLambda: 0.1,
+  rotatePhi: 0,
+  rotateGamma: 0
+}
+
+function initMenu() {
+  d3.select('#menu')
+    .selectAll('.slider.item input')
+    .on('input', function(d) {
+      var attr = d3.select(this).attr('name');
+      state[attr] = this.value;
+      d3.select(this.parentNode.parentNode).select('.value').text(this.value);
+      update()
+    });
+
+  d3.select('#menu .projection-type select')
+    .on('change', function(d) {
+      state.type = this.options[this.selectedIndex].value;
+      update()
+    })
+    .selectAll('option')
+    .data(projectionTypes)
+    .enter()
+    .append('option')
+    .attr('value', function(d) {return d;})
+    .text(function(d) {return d;});
+}
+
+function update() {
+  // Update projection
+  projection = d3['geo' + state.type]()
+  geoGenerator.projection(projection);
+
+  projection
+    .scale(state.scale)
+    .translate([state.translateX, state.translateY])
+    .center([state.centerLon, state.centerLat])
+    .rotate([state.rotateLambda, state.rotatePhi, state.rotateGamma])
+
+  // Update world map
+  var u = d3.select('g.map')
+    .selectAll('path')
+    .data(geojson.features)
+
+  u.enter()
+    .append('path')
+    .merge(u)
+    .attr('d', geoGenerator)
+
+  // Update projection center
+  var projectedCenter = projection([state.centerLon, state.centerLat]);
+  d3.select('.projection-center')
+    .attr('cx', projectedCenter[0])
+    .attr('cy', projectedCenter[1]);
+
+  // Update graticule
+  d3.select('.graticule path')
+    .datum(graticule())
+    .attr('d', geoGenerator);
+
+  // Update circles
+  u = d3.select('.circles')
+    .selectAll('path')
+    .data(circles.map(function(d) {
+      geoCircle.center(d);
+      return geoCircle();
+    }));
+
+  u.enter()
+    .append('path')
+    .merge(u)
+    .attr('d', geoGenerator);
+}
+
+
+d3.json('https://gist.githubusercontent.com/d3indepth/f28e1c3a99ea6d84986f35ac8646fac7/raw/c58cede8dab4673c91a3db702d50f7447b373d98/ne_110m_land.json', function(err, json) {
+  geojson = json;
+  initMenu();
+  update();
+})
+
+  </script>
+</body>
+</html>
