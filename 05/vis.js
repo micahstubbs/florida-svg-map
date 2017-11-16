@@ -1,7 +1,10 @@
 const width = 960;
 const height = 500;
 
-const projection = d3.geoAlbers().translate([width / 2, height / 2]);
+const projection = d3.geoAlbers()
+  // .center([-82.46, 28.681389]) // geographic center of Florida
+  .translate([0.28*width, 0.1*height]);
+
 const path = d3.geoPath().projection(projection);
 
 const color = d3.scaleQuantile()
