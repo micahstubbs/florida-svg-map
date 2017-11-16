@@ -74,8 +74,8 @@ svg {
       <div><select name="type" value="150"></select></div>
     </div>
     <div class="slider item">
-      <div class="label">scale (<span class="value">120</span>)</div>
-      <div><span class="low">0</span> <input type="range" name="scale" min="0" max="2000" value="120"> <span>2000</span></div>
+      <div class="label">scale (<span class="value">3100</span>)</div>
+      <div><span class="low">0</span> <input type="range" name="scale" min="0" max="10000" value="3100"> <span>10000</span></div>
     </div>
     <div class="slider item">
       <div class="label">center (lon) (<span class="value">-82</span>)</div>
@@ -149,7 +149,7 @@ var geoCircle = d3.geoCircle().radius(10).precision(1);
 
 var state = {
   type: 'ConicEqualArea',
-  scale: 120,
+  scale: 3100,
   translateX: 450,
   translateY: 250,
   centerLon: -82,
