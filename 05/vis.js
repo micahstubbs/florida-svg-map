@@ -14,6 +14,16 @@ const svg = d3
   .attr('width', width)
   .attr('height', height);
 
+// add an rect with a border
+// to help with debugging
+svg.append('rect')
+  .attr('x', 0)
+  .attr('y', 0)
+  .attr('width', width)
+  .attr('height', height)
+  .style('fill', 'none')
+  .style('stroke', 'lightGray');
+
 const tooltip = d3
   .select('body')
   .append('div')
