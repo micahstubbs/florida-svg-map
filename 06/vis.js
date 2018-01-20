@@ -126,6 +126,9 @@ function draw() {
       return prev;
     }, {});
 
+  console.log('countyFIPS', countyFIPS);
+  console.log('lyme', lyme);
+
   const yearRange = '2007_2011';
   // for (var i = 0; i < document.selector.length; i++) { // first year range for page load
   //   if (document.selector[i].checked) {
