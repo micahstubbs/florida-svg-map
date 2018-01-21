@@ -187,7 +187,7 @@ function draw() {
         .select('pre')
         .text(
           `${countyFIPS[p.STATEFP][p.COUNTYFP]} County, ${stateFIPS[p.STATEFP]
-            .name}\n${populationText}`
+            .name}\n${populationText} residents`
         );
 
       return tooltip.style('visibility', 'visible');
