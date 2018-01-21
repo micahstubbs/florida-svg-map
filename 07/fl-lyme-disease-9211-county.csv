@@ -1,0 +1,69 @@
+StateCode,CountyCode,StateName,CountyName,ConfirmedCount_1992_1996,ConfirmedCount_1997_2001,ConfirmedCount_2002_2006,ConfirmedCount_2007_2011
+12,0,Florida,Florida,1,,,
+12,1,Florida,Alachua County,3,1,6,3
+12,3,Florida,Baker County,,,1,
+12,5,Florida,Bay County,4,1,1,1
+12,7,Florida,Bradford County,,,,
+12,9,Florida,Brevard County,3,12,4,10
+12,11,Florida,Broward County,5,2,2,8
+12,13,Florida,Calhoun County,1,1,,
+12,15,Florida,Charlotte County,1,,8,4
+12,17,Florida,Citrus County,1,3,8,7
+12,19,Florida,Clay County,3,4,1,
+12,21,Florida,Collier County,5,6,3,2
+12,23,Florida,Columbia County,,,1,
+12,27,Florida,DeSoto County,1,1,,1
+12,29,Florida,Dixie County,1,,,
+12,31,Florida,Duval County,9,5,6,9
+12,33,Florida,Escambia County,4,7,4,5
+12,35,Florida,Flagler County,,3,1,7
+12,37,Florida,Franklin County,,1,,1
+12,39,Florida,Gadsden County,1,,,
+12,41,Florida,Gilchrist County,,,1,
+12,43,Florida,Glades County,,,,
+12,45,Florida,Gulf County,,,,
+12,47,Florida,Hamilton County,,,,
+12,49,Florida,Hardee County,,1,,1
+12,51,Florida,Hendry County,1,,,
+12,53,Florida,Hernando County,1,6,,6
+12,55,Florida,Highlands County,,1,2,2
+12,57,Florida,Hillsborough County,3,16,15,20
+12,59,Florida,Holmes County,,2,,
+12,61,Florida,Indian River County,1,13,8,5
+12,63,Florida,Jackson County,1,,,
+12,65,Florida,Jefferson County,,,,
+12,67,Florida,Lafayette County,,,,
+12,69,Florida,Lake County,11,7,4,
+12,71,Florida,Lee County,9,13,9,28
+12,73,Florida,Leon County,3,4,3,1
+12,75,Florida,Levy County,1,,,1
+12,77,Florida,Liberty County,,,,
+12,79,Florida,Madison County,,,,
+12,81,Florida,Manatee County,1,7,6,10
+12,83,Florida,Marion County,8,2,4,14
+12,85,Florida,Martin County,5,8,6,10
+12,86,Florida,Miami-Dade County,6,20,15,19
+12,87,Florida,Monroe County,1,3,3,2
+12,89,Florida,Nassau County,4,3,7,1
+12,91,Florida,Okaloosa County,3,9,3,1
+12,93,Florida,Okeechobee County,1,,,
+12,95,Florida,Orange County,9,10,11,15
+12,97,Florida,Osceola County,3,3,5,1
+12,99,Florida,Palm Beach County,4,22,25,30
+12,101,Florida,Pasco County,3,1,10,9
+12,103,Florida,Pinellas County,6,37,27,24
+12,105,Florida,Polk County,3,,2,9
+12,107,Florida,Putnam County,3,3,2,
+12,109,Florida,St. Johns County,4,6,1,5
+12,111,Florida,St. Lucie County,1,1,2,3
+12,113,Florida,Santa Rosa County,2,3,,5
+12,115,Florida,Sarasota County,5,14,20,14
+12,117,Florida,Seminole County,1,4,4,3
+12,119,Florida,Sumter County,2,3,,5
+12,121,Florida,Suwannee County,1,1,,
+12,123,Florida,Taylor County,,1,,
+12,125,Florida,Union County,,,,
+12,127,Florida,Volusia County,3,6,7,10
+12,129,Florida,Wakulla County,,5,,
+12,131,Florida,Walton County,,1,1,1
+12,133,Florida,Washington County,1,,,
