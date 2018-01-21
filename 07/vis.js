@@ -56,7 +56,6 @@ const tooltip = d3
   .style('visibility', 'hidden');
 
 let counties = {};
-let lyme = {};
 let stateFIPS = {};
 let countyFIPS = {};
 let population = [];
@@ -71,11 +70,6 @@ d3.json('state-fips.json', (err, data) => {
   stateFIPS = data;
   if (!--remaining) draw();
 });
-
-// d3.csv('fl-lyme-disease-9211-county.csv', (err, data) => {
-//   lyme = data;
-//   if (!--remaining) draw();
-// });
 
 d3.csv('fl-counties-population-est-20170401.csv', (err, data) => {
   population = data;
@@ -96,9 +90,7 @@ function draw() {
     populationHash[d.county] = d.population;
   });
   console.log('populationHash', populationHash);
-
   console.log('population', population);
-
   console.log(
     'd3.extent(population.map(d => d.population))',
     d3.extent(population.map(d => d.population))
@@ -138,7 +130,9 @@ function draw() {
   colorScale.domain(ckmeansBreaks);
 
   console.log('colorScale.domain()', colorScale.domain());
-  console.log('colorScale(143801)', colorScale(143801));
+  
+  // test our colorScale
+  // console.log('colorScale(143801)', colorScale(143801));
 
   //
   // draw the map
