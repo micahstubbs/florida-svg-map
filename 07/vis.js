@@ -80,6 +80,9 @@ d3.csv('fl-counties-population-est-20170401.csv', (err, data) => {
 });
 
 function draw() {
+  //
+  // process data
+  // 
   population = population.map(d => ({
     county: d.county,
     population: Number(d.population)
@@ -101,7 +104,6 @@ function draw() {
   //
   // set up color scale
   //
-
   const colorScale = d3
     .scaleQuantile()
     .range([
@@ -138,7 +140,6 @@ function draw() {
   //
   //
   //
-
   countyFIPS = d3
     .nest()
     .key(d => d.properties.STATEFP) // nest by state
@@ -157,44 +158,9 @@ function draw() {
       prev[next.state] = next.counties;
       return prev;
     }, {});
-
-  // lyme = d3
-  //   .nest()
-  //   .key(d => (d.StateCode.length == 1 ? `0${d.StateCode}` : d.StateCode))
-  //   .entries(lyme);
-
-  // lyme = lyme
-  //   .map(d => ({
-  //     state: d.key,
-
-  //     counties: d.values.reduce((prev, next) => {
-  //       let cc = '';
-  //       if (next.CountyCode.length == 1) {
-  //         cc = `00${next.CountyCode}`;
-  //       } else if (next.CountyCode.length == 2) {
-  //         cc = `0${next.CountyCode}`;
-  //       } else {
-  //         cc = next.CountyCode;
-  //       }
-
-  //       prev[cc] = next;
-  //       return prev;
-  //     }, {})
-  //   }))
-  //   .reduce((prev, next) => {
-  //     prev[next.state] = next.counties;
-  //     return prev;
-  //   }, {});
-
   console.log('countyFIPS', countyFIPS);
-  // console.log('lyme', lyme);
 
   const yearRange = '2007_2011';
-  // for (var i = 0; i < document.selector.length; i++) { // first year range for page load
-  //   if (document.selector[i].checked) {
-  //     yearRange = document.selector[i].value;
-  //   }
-  // }
 
   svg
     .selectAll('.county')
@@ -203,23 +169,10 @@ function draw() {
     .append('path')
     .attr('class', d => 'county')
     .attr('d', path)
-    // .style('fill', d => {
-    //   const p = d.properties;
-    //   return lyme[p.STATEFP] &&
-    //   lyme[p.STATEFP][p.COUNTYFP] &&
-    //   lyme[p.STATEFP][p.COUNTYFP][`ConfirmedCount_${yearRange}`] != ''
-    //     ? color(+lyme[p.STATEFP][p.COUNTYFP][`ConfirmedCount_${yearRange}`])
-    //     : '#e0e0e0';
-    // })
     .style('fill', d => {
       const countyName = d.properties.NAME;
       const countyPopulation = populationHash[countyName];
       const currentColor = colorScale(countyPopulation);
-
-      // console.log('d from style', d);
-      // console.log('countyName', countyName);
-      // console.log('countyPopulation', countyPopulation);
-      // console.log('currentColor', currentColor);
       return currentColor;
     })
     .style('stroke', '#969696')
@@ -229,24 +182,14 @@ function draw() {
       tooltip.append('pre');
 
       const p = d.properties;
-      let lymeVal = '';
-
-      if (
-        lyme[p.STATEFP] &&
-        lyme[p.STATEFP][p.COUNTYFP] &&
-        lyme[p.STATEFP][p.COUNTYFP][`ConfirmedCount_${yearRange}`] != ''
-      ) {
-        const l = lyme[p.STATEFP][p.COUNTYFP][`ConfirmedCount_${yearRange}`];
-        lymeVal = l + (l == '1' ? ' confirmed case' : ' confirmed cases');
-      } else {
-        lymeVal = 'No Data';
-      }
+      const countyName = p.NAME;
+      const countyPopulation = populationHash[countyName];
 
       tooltip
         .select('pre')
         .text(
           `${countyFIPS[p.STATEFP][p.COUNTYFP]} County, ${stateFIPS[p.STATEFP]
-            .name}\n${lymeVal}`
+            .name}\n${countyPopulation}`
         );
 
       return tooltip.style('visibility', 'visible');
