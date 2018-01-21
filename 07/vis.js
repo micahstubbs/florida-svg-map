@@ -96,6 +96,8 @@ function draw() {
     d3.extent(population.map(d => d.population))
   );
 
+  const populationFormat = d3.format(".2s")
+
   //
   // set up color scale
   //
@@ -179,12 +181,13 @@ function draw() {
       const p = d.properties;
       const countyName = p.NAME;
       const countyPopulation = populationHash[countyName];
+      const populationText = populationFormat(countyPopulation);
 
       tooltip
         .select('pre')
         .text(
           `${countyFIPS[p.STATEFP][p.COUNTYFP]} County, ${stateFIPS[p.STATEFP]
-            .name}\n${countyPopulation}`
+            .name}\n${populationText}`
         );
 
       return tooltip.style('visibility', 'visible');
